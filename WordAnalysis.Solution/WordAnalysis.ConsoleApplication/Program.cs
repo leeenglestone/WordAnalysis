@@ -19,30 +19,64 @@ namespace WordAnalysis.ConsoleApplication
         {
             ReadFile();
 
-            _letters = Analysis.AnalyseWords(_words, _totalWords);
+            //_letters = Analysis.AnalyseWords(_words, _totalWords);
 
-            Output.OutputLetterStartsWith(_letters);
-            Output.OutputLetterEndsWith(_letters);
-            Output.OutputWordLengths(_wordLengthFrequency);
-            Output.OutputLongestWord(_words);
-            Output.OutputLetterFrequency(_letterFrequency, _totalLetters);
-            Output.OutputDoubleLetterFrequency(_letters);
-            Output.OutputWordsEndingWithIng(_words);
+            //Output.OutputLetterStartsWith(_letters);
+            //Output.OutputLetterEndsWith(_letters);
+            //Output.OutputWordLengths(_wordLengthFrequency);
+            //Output.OutputLongestWord(_words);
+            //Output.OutputLetterFrequency(_letterFrequency, _totalLetters);
+            //Output.OutputDoubleLetterFrequency(_letters);
+            //Output.OutputWordsEndingWithIng(_words);
 
-            ChartBuilder.SaveLetterFrequencyChart(_letterFrequency);
-            ChartBuilder.SaveLetterStartingWithChart(_letters);
-            ChartBuilder.SaveLetterEndingWithChart(_letters);
-            ChartBuilder.SaveWordLengthFrequencyChart(_wordLengthFrequency);
-            ChartBuilder.SaveDoubleLetterFrequencyChart(_doubleLetterFrequency);
+            //ChartBuilder.SaveLetterFrequencyChart(_letterFrequency);
+            //ChartBuilder.SaveLetterStartingWithChart(_letters);
+            //ChartBuilder.SaveLetterEndingWithChart(_letters);
+            //ChartBuilder.SaveWordLengthFrequencyChart(_wordLengthFrequency);
+            //ChartBuilder.SaveDoubleLetterFrequencyChart(_doubleLetterFrequency);
 
-            Analysis.FindWords("barnslieu", _words);
+            //Analysis.FindWords("barnslieu", _words);
+
+            //var possibleWords = Analysis.FindWords("tac", "semph", "XaXXX", _words).ToList();
+
+            List<Tuple<int, char>> lettersNotAtPosition = new List<Tuple<int, char>>();
+
+            lettersNotAtPosition.Add(new Tuple<int, char>(1, 't'));
+            lettersNotAtPosition.Add(new Tuple<int, char>(2, 't'));
+            lettersNotAtPosition.Add(new Tuple<int, char>(3, 'a'));
+            lettersNotAtPosition.Add(new Tuple<int, char>(3, 'c'));
+
+            var possibleWords = Analysis.FindWords("tatca", "spemh", "XaXXX", lettersNotAtPosition, _words).ToList();
+
+
+            /*
+            using (StreamWriter file = new StreamWriter(@"C:\Development\WordAnalysis\WordAnalysis.Solution\WordAnalysis.ConsoleApplication\Data\five-letter-words.txt"))
+            {
+                foreach (var word in _words)
+                {
+                    if (word.Length != 5)
+                        continue;
+
+                    if (word.Contains("."))
+                        continue;
+
+                    if (word.Contains("-"))
+                        continue;
+
+                    if (word.Contains("'"))
+                        continue;
+
+                    file.WriteLine(word);
+                }
+            }
+            */
 
             Console.ReadLine();
         }
 
         static void ReadFile()
         {
-            foreach (string word in File.ReadLines(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/words.txt")))
+            foreach (string word in File.ReadLines(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/five-letter-words.txt")))
             {
                 var wordTrimmedLength = word.Trim().Length;
 

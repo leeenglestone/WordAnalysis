@@ -26,12 +26,12 @@ namespace WordAnalysis.ConsoleApplication
             return _letters;
         }
 
-        public static IEnumerable<string> FindWords(string letters, List<string> words)
+        public static IEnumerable<string> FindWords(string includingLetters, List<string> words)
         {
             var matchingWords = new List<string>();
 
             Console.WriteLine();
-            Console.WriteLine($"== Solving ({letters.ToUpper()}) ==");
+            Console.WriteLine($"== Solving ({includingLetters.ToUpper()}) ==");
 
             var match = true;
 
@@ -39,15 +39,95 @@ namespace WordAnalysis.ConsoleApplication
             {
                 match = true;
 
-                if (word.Length != letters.Length)
+                //if (word.Length != includingLetters.Length)
+                //{
+                //    match = false;
+                //    continue;
+                //}
+
+                foreach (var letter in includingLetters)
+                {
+                    if (!word.Contains(letter))
+                    {
+                        match = false;
+                        continue;
+                    }
+                }
+
+                if (match)
+                {
+                    matchingWords.Add(word.ToUpper());
+                    Console.WriteLine(word.ToUpper());
+                }
+            }
+
+            return matchingWords;
+        }
+
+        public static IEnumerable<string> FindWords(
+            string includingLetters,
+            string excludingLetters,
+            string pattern,
+            List<Tuple<int, char>> lettersNotAtPosition,
+            List<string> allWords)
+        {
+            var matchingWords = new List<string>();
+
+            Console.WriteLine();
+            Console.WriteLine($"== Solving ({includingLetters.ToUpper()}) ==");
+
+            var match = true;
+
+            // For every word
+            foreach (var word in allWords)
+            {
+                match = true;
+
+                /*
+                if (word.Length != includingLetters.Length)
                 {
                     match = false;
                     continue;
                 }
+                */
 
-                foreach (var letter in letters)
+                // Filter included letters (must include these)
+                foreach (var letter in includingLetters)
                 {
                     if (!word.Contains(letter))
+                    {
+                        match = false;
+                        continue;
+                    }
+                }
+
+                // Filter excluded letters (cannot include these)
+                foreach (var letter in excludingLetters)
+                {
+                    if (word.Contains(letter))
+                    {
+                        match = false;
+                        continue;
+                    }
+                }
+
+                // Filter known pattern
+                for (int x = 0; x < 5; x++)
+                {
+                    if (pattern[x] == 'X')
+                        continue;
+
+                    if (pattern[x] != word[x])
+                    {
+                        match = false;
+                        continue;
+                    }
+                }
+
+                // Filter valid letters known not to be at positions
+                foreach (var item in lettersNotAtPosition)
+                {
+                    if (word[item.Item1] == item.Item2)
                     {
                         match = false;
                         continue;
